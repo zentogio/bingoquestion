@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บิงโกฟิสิกส์ | จอพิธีกร</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: oklch(0.20 0.045 262);
+    --bg-deep: oklch(0.14 0.04 262);
+    --surface: oklch(0.27 0.05 262);
+    --surface-hi: oklch(0.33 0.055 262);
+    --line: oklch(0.42 0.06 262 / 0.5);
+    --ink: oklch(0.97 0.01 262);
+    --ink-dim: oklch(0.78 0.03 262);
+    --ink-faint: oklch(0.62 0.03 262);
+    --accent: oklch(0.82 0.16 88);
+    --accent-ink: oklch(0.20 0.05 88);
+    --accent-2: oklch(0.72 0.19 45);
+    --accent-2-ink: oklch(0.99 0.01 45);
+    --danger: oklch(0.65 0.18 25);
+    --shadow: 0 10px 30px oklch(0.10 0.03 262 / 0.55);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin: 0;
+    min-height: 100dvh;
+    background:
+      radial-gradient(ellipse 120% 60% at 50% -10%, oklch(0.30 0.07 262 / 0.9), transparent 60%),
+      radial-gradient(circle at 12% 15%, oklch(0.82 0.16 88 / 0.06), transparent 42%),
+      radial-gradient(circle at 88% 90%, oklch(0.72 0.19 45 / 0.07), transparent 42%),
+      var(--bg);
+    color: var(--ink);
+    font-family: "Kanit", "Noto Sans Thai", "Tahoma", system-ui, sans-serif;
+  }
+
+  .app{
+    max-width: 760px;
+    margin: 0 auto;
+    padding: clamp(16px, 3vw, 32px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(16px, 3vw, 24px);
+    min-height: 100dvh;
+  }
+
+  header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .brand{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand svg{ width: 30px; height: 30px; color: var(--accent); flex-shrink: 0; }
+
+  .brand-text h1{
+    margin: 0;
+    font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-text p{
+    margin: 2px 0 0;
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+  }
+
+  .reset-btn{
+    background: var(--surface-hi);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 180ms var(--ease-out-expo), transform 180ms var(--ease-out-expo), border-color 180ms var(--ease-out-expo);
+  }
+  .reset-btn:hover{ background: oklch(0.38 0.06 262); border-color: oklch(0.5 0.07 262); }
+  .reset-btn:active{ transform: scale(0.97); }
+  .reset-btn svg{ width: 16px; height: 16px; }
+
+  .stage{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding: 12px 0;
+  }
+
+  .progress-row{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .progress-label{
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .progress-track{
+    flex: 1;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--surface-hi);
+    overflow: hidden;
+  }
+
+  .progress-fill{
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-2), var(--accent));
+    border-radius: 999px;
+    transition: width 320ms var(--ease-out-expo);
+  }
+
+  .qcard{
+    position: relative;
+    background: linear-gradient(180deg, var(--surface), var(--bg-deep));
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    padding: clamp(28px, 6vw, 56px);
+    min-height: clamp(280px, 52vh, 480px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    text-align: center;
+  }
+
+  .qlabel{
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+  }
+
+  .qtext{
+    font-size: clamp(1.7rem, 6vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 0;
+    max-width: 22ch;
+    transition: opacity 200ms var(--ease-out-expo), transform 200ms var(--ease-out-expo);
+  }
+
+  .qtext.enter{ opacity: 0; transform: translateY(6px); }
+
+  .answer-panel{
+    width: 100%;
+    max-width: 34ch;
+    border-radius: 16px;
+    background: linear-gradient(155deg, var(--accent), var(--accent-2));
+    color: var(--accent-ink);
+    padding: 18px 22px;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    font-weight: 700;
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: grid-template-rows 260ms var(--ease-out-expo), opacity 220ms var(--ease-out-expo), transform 220ms var(--ease-out-expo), padding 260ms var(--ease-out-expo), margin 260ms var(--ease-out-expo);
+    overflow: hidden;
+  }
+
+  .answer-panel > div{ overflow: hidden; min-height: 0; }
+
+  .answer-panel.show{
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .answer-panel:not(.show){
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .answer-label{
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    opacity: 0.75;
+    margin-bottom: 4px;
+  }
+
+  .done-msg{
+    text-align: center;
+    font-size: 1rem;
+    color: var(--ink-dim);
+    font-weight: 600;
+    padding: 8px 0;
+  }
+
+  .controls{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .btn{
+    font-family: inherit;
+    border: none;
+    border-radius: 16px;
+    padding: 18px 20px;
+    font-size: clamp(1rem, 2.4vw, 1.2rem);
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: transform 160ms var(--ease-out-expo), box-shadow 200ms var(--ease-out-expo), filter 160ms var(--ease-out-expo), opacity 160ms var(--ease-out-expo);
+  }
+
+  .btn:active{ transform: scale(0.97); }
+  .btn svg{ width: 20px; height: 20px; }
+
+  .btn-reveal{
+    background: var(--surface-hi);
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .btn-reveal:hover{ background: oklch(0.38 0.06 262); }
+
+  .btn-next{
+    background: linear-gradient(155deg, var(--accent), var(--accent-2));
+    color: var(--accent-ink);
+    box-shadow: 0 10px 24px oklch(0.72 0.19 45 / 0.28);
+  }
+  .btn-next:hover{ filter: brightness(1.05); }
+  .btn-next:disabled{
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+    filter: none;
+    transform: none;
+  }
+
+  .history-section{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+
+  .history-head{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .history-head h2{
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .history-head span{
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+  }
+
+  .history-list{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    max-height: 42vh;
+    overflow-y: auto;
+    padding: 2px 2px 4px;
+  }
+
+  .history-empty{
+    color: var(--ink-faint);
+    font-size: 0.88rem;
+    padding: 14px 4px;
+  }
+
+  .hitem{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    animation: slideIn 220ms var(--ease-out-expo);
+  }
+
+  .hitem.current{
+    border-color: var(--accent);
+    background: oklch(0.30 0.06 262);
+  }
+
+  @keyframes slideIn{
+    from{ opacity: 0; transform: translateY(-6px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+
+  .hitem .hno{
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .hitem .hq{
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 4px;
+  }
+
+  .hitem .ha{
+    font-size: 0.82rem;
+    color: var(--ink-dim);
+    margin: 0;
+  }
+
+  .hitem .ha b{ color: var(--accent); font-weight: 700; }
+
+  @media (prefers-reduced-motion: reduce){
+    .qtext, .answer-panel, .btn, .hitem, .progress-fill{
+      animation: none !important;
+      transition: opacity 160ms linear !important;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2.4"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(-30 12 12)"/></svg>
+        <div class="brand-text">
+          <h1>บิงโกฟิสิกส์ — จอพิธีกร</h1>
+          <p>สุ่มคำถามทีละข้อให้ผู้เล่นฟัง</p>
+        </div>
+      </div>
+      <button class="reset-btn" id="resetBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+        เริ่มเกมใหม่
+      </button>
+    </header>
+
+    <div class="stage">
+      <div class="progress-row">
+        <span class="progress-label" id="progressLabel">คำถามที่ 1 จาก 24</span>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <div class="qcard">
+        <span class="qlabel" id="qlabel">คำถาม</span>
+        <p class="qtext" id="qtext"></p>
+        <div class="answer-panel" id="answerPanel">
+          <div>
+            <div class="answer-label">เฉลย</div>
+            <div id="answerText"></div>
+          </div>
+        </div>
+        <div id="doneMsg" class="done-msg" style="display:none;">ถามครบทุกข้อแล้ว กด "เริ่มเกมใหม่" เพื่อเล่นรอบใหม่</div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-reveal" id="revealBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          เฉลย
+        </button>
+        <button class="btn btn-next" id="nextBtn" type="button">
+          คำถามต่อไป
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="history-section">
+      <div class="history-head">
+        <h2>ประวัติคำถามในตานี้</h2>
+        <span id="historyCount">0 ข้อ</span>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">ยังไม่มีคำถามที่ถามไปในตานี้</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS = [
+    { id: 1,  question: "แรงอะไรทำให้รถหยุด?", answer: "แรงเสียดทาน" },
+    { id: 2,  question: "แรง g คือแรงอะไร?", answer: "แรงโน้มถ่วง" },
+    { id: 3,  question: "อะไรทำให้รถเคลื่อนที่เร็วขึ้น เรียกว่าอะไร?", answer: "ความเร็ว" },
+    { id: 4,  question: "s = vt, s คืออะไร?", answer: "ระยะทาง" },
+    { id: 5,  question: "หน่วยของความเร็วคืออะไร?", answer: "เมตร/วินาที (m/s)" },
+    { id: 6,  question: "ความเร็วใช้สัญลักษณ์อะไร?", answer: "v" },
+    { id: 7,  question: "ซุ้มนี้คือซุ้มเกี่ยวกับวิชาอะไร?", answer: "ฟิสิกส์ / เคมี / ชีวะ / ดาราศาสตร์" },
+    { id: 8,  question: "ห้องที่จัดกิจกรรมอยู่คือห้องอะไร?", answer: "(เติมชื่อห้องจริงของงาน)" },
+    { id: 9,  question: "แรงคืออะไร?", answer: "สิ่งที่ทำให้วัตถุเปลี่ยนสภาพการเคลื่อนที่ (แรงผลักหรือแรงดึง)" },
+    { id: 10, question: "หน่วยของแรงคืออะไร?", answer: "นิวตัน (N)" },
+    { id: 11, question: "น้ำหนักมีหน่วยเป็นอะไร?", answer: "นิวตัน (N)" },
+    { id: 12, question: "มวลมีหน่วยเป็นอะไร?", answer: "กิโลกรัม (kg)" },
+    { id: 14, question: "ความเร่งคืออะไร?", answer: "อัตราการเปลี่ยนแปลงความเร็ว" },
+    { id: 15, question: "สัญลักษณ์ของความเร่งคืออะไร?", answer: "a" },
+    { id: 16, question: "หน่วยของความเร่งคืออะไร?", answer: "เมตร/วินาที² (m/s²)" },
+    { id: 17, question: "เวลาใช้สัญลักษณ์อะไร?", answer: "t" },
+    { id: 18, question: "หน่วย SI ของเวลาคืออะไร?", answer: "วินาที (s)" },
+    { id: 19, question: "กฎข้อที่ 1 ของนิวตัน เรียกว่ากฎอะไร?", answer: "กฎความเฉื่อย" },
+    { id: 20, question: "วัตถุที่ไม่มีแรงมากระทำ จะเคลื่อนที่อย่างไร?", answer: "ด้วยความเร็วคงที่ เป็นเส้นตรง" },
+    { id: 21, question: "แรงโน้มถ่วงของโลกมีค่าประมาณเท่าไร?", answer: "9.8 m/s²" },
+    { id: 22, question: "ยกตัวอย่างแรงเสียดทานที่มีประโยชน์", answer: "เช่น การเดิน / การเบรกรถ" },
+    { id: 23, question: "พลังงานจลน์คือพลังงานของอะไร?", answer: "วัตถุที่กำลังเคลื่อนที่" },
+    { id: 24, question: "แสงกับเสียง อะไรเดินทางเร็วกว่ากัน?", answer: "แสง" },
+    { id: 25, question: "โลกหมุนรอบตัวเองใช้เวลากี่ชั่วโมง?", answer: "24 ชั่วโมง" }
+  ];
+
+  var TOTAL = QUESTIONS.length;
+  var STORAGE_KEY = "physicsBingoQuestionMasterState_v1";
+
+  var order = [];
+  var currentIndex = 0;
+  var history = [];
+  var answerShown = false;
+  var completed = false;
+
+  var qtextEl = document.getElementById("qtext");
+  var answerPanel = document.getElementById("answerPanel");
+  var answerTextEl = document.getElementById("answerText");
+  var doneMsg = document.getElementById("doneMsg");
+  var revealBtn = document.getElementById("revealBtn");
+  var nextBtn = document.getElementById("nextBtn");
+  var resetBtn = document.getElementById("resetBtn");
+  var progressLabel = document.getElementById("progressLabel");
+  var progressFill = document.getElementById("progressFill");
+  var historyList = document.getElementById("historyList");
+  var historyCount = document.getElementById("historyCount");
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function persist(){
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        orderIds: order.map(function(q){ return q.id; }),
+        currentIndex: currentIndex,
+        history: history,
+        answerShown: answerShown,
+        completed: completed
+      }));
+    } catch (e) { /* storage unavailable, game still works for this session */ }
+  }
+
+  function loadPersisted(){
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      var s = JSON.parse(raw);
+      if (!s || !Array.isArray(s.orderIds) || s.orderIds.length !== TOTAL) return null;
+      var byId = {};
+      QUESTIONS.forEach(function(q){ byId[q.id] = q; });
+      var ord = s.orderIds.map(function(id){ return byId[id]; });
+      if (ord.some(function(q){ return !q; })) return null;
+      if (typeof s.currentIndex !== "number" || s.currentIndex < 0 || s.currentIndex >= TOTAL) return null;
+      return {
+        order: ord,
+        currentIndex: s.currentIndex,
+        history: Array.isArray(s.history) ? s.history : [],
+        answerShown: !!s.answerShown,
+        completed: !!s.completed
+      };
+    } catch (e) { return null; }
+  }
+
+  function startGame(fresh){
+    var restored = fresh ? null : loadPersisted();
+    if (restored){
+      order = restored.order;
+      currentIndex = restored.currentIndex;
+      history = restored.history;
+      completed = restored.completed;
+      renderHistory();
+      renderCurrent(false);
+      setAnswerShown(restored.answerShown);
+      if (completed){
+        doneMsg.style.display = "block";
+        nextBtn.disabled = true;
+      }
+      return;
+    }
+    order = shuffle(QUESTIONS);
+    currentIndex = 0;
+    history = [];
+    completed = false;
+    renderHistory();
+    setAnswerShown(false);
+    renderCurrent(true);
+    persist();
+  }
+
+  function setAnswerShown(shown){
+    answerShown = shown;
+    answerPanel.classList.toggle("show", shown);
+  }
+
+  function renderCurrent(pushHistory){
+    var item = order[currentIndex];
+    answerTextEl.textContent = item.answer;
+
+    qtextEl.classList.add("enter");
+    qtextEl.textContent = item.question;
+    requestAnimationFrame(function(){ qtextEl.classList.remove("enter"); });
+
+    var isLast = currentIndex === TOTAL - 1;
+    doneMsg.style.display = "none";
+    nextBtn.disabled = false;
+    nextBtn.textContent = "";
+    var label = document.createElement("span");
+    label.textContent = isLast ? "จบตานี้" : "คำถามต่อไป";
+    nextBtn.appendChild(label);
+    nextBtn.insertAdjacentHTML("beforeend", '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>');
+
+    progressLabel.textContent = "คำถามที่ " + (currentIndex + 1) + " จาก " + TOTAL;
+    progressFill.style.width = (((currentIndex + 1) / TOTAL) * 100) + "%";
+
+    if (pushHistory){
+      history.unshift({ n: currentIndex + 1, question: item.question, answer: item.answer });
+      renderHistory();
+    }
+  }
+
+  function renderHistory(){
+    historyCount.textContent = history.length + " ข้อ";
+    if (history.length === 0){
+      historyList.innerHTML = '<div class="history-empty">ยังไม่มีคำถามที่ถามไปในตานี้</div>';
+      return;
+    }
+    historyList.innerHTML = "";
+    history.forEach(function(h, i){
+      var el = document.createElement("div");
+      el.className = "hitem" + (i === 0 ? " current" : "");
+      var no = document.createElement("div");
+      no.className = "hno";
+      no.textContent = "ข้อที่ " + h.n;
+      var q = document.createElement("p");
+      q.className = "hq";
+      q.textContent = h.question;
+      var a = document.createElement("p");
+      a.className = "ha";
+      a.innerHTML = "เฉลย: <b></b>";
+      a.querySelector("b").textContent = h.answer;
+      el.appendChild(no);
+      el.appendChild(q);
+      el.appendChild(a);
+      historyList.appendChild(el);
+    });
+  }
+
+  revealBtn.addEventListener("click", function(){
+    setAnswerShown(!answerShown);
+    persist();
+  });
+
+  nextBtn.addEventListener("click", function(){
+    if (currentIndex >= TOTAL - 1){
+      completed = true;
+      doneMsg.style.display = "block";
+      nextBtn.disabled = true;
+      persist();
+      return;
+    }
+    currentIndex++;
+    setAnswerShown(false);
+    renderCurrent(true);
+    persist();
+  });
+
+  resetBtn.addEventListener("click", function(){
+    startGame(true);
+  });
+
+  startGame(false);
+})();
+</script>
+</body>
+</html>
